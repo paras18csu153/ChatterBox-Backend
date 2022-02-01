@@ -197,6 +197,7 @@ exports.exitGroup = async (req, res) => {
 
   if (existingGroup.users.length > 0) {
     // Update Users of Group
+    existingGroup.admins.push(existingGroup.users[0]);
     try {
       existingGroup = await Group.updateGroupById(group.id, existingGroup);
     } catch (err) {
