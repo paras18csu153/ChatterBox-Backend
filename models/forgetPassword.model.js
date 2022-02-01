@@ -14,13 +14,13 @@ var ForgetPassword = (module.exports = mongoose.model(
   forgetPasswordSchema
 ));
 
-// Create user
+// Create Forget Paassword
 module.exports.create = async (fp) => {
   fp = await fp.save();
   return fp;
 };
 
-// Get Verification Links for user
+// Get Verification Links for Reset Password
 module.exports.getForUser = async (verificationLink) => {
   var fp = await ForgetPassword.findOne({
     verificationLink: verificationLink,
@@ -28,7 +28,7 @@ module.exports.getForUser = async (verificationLink) => {
   return fp;
 };
 
-// Delete Verification Links for user
+// Delete Verification Links for Reset Password
 module.exports.deleteForUser = async (verificationLink) => {
   var fp = await ForgetPassword.deleteMany({
     verificationLink: verificationLink,
