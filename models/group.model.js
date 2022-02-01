@@ -18,3 +18,19 @@ module.exports.create = async (group) => {
   group = await group.save();
   return group;
 };
+
+// Get Group By ID
+module.exports.getById = async (id) => {
+  group = await Group.findById(id);
+  return group;
+};
+
+// Update Users By ID
+module.exports.updateUsersById = async (id, users) => {
+  var existingGroup = await Group.findByIdAndUpdate(
+    id,
+    { $set: { users: users } },
+    { new: true }
+  );
+  return existingGroup;
+};
