@@ -300,7 +300,7 @@ exports.verifyMail = async (req, res) => {
 exports.changePassword = async (req, res) => {
   var user = req.body;
 
-  // Backend Validation
+  // Data Validation
   if (!user.username && !user.email) {
     return res
       .status(400)
@@ -336,7 +336,7 @@ exports.changePassword = async (req, res) => {
     });
   }
 
-  // Check User Password
+  // Check if user doesn't exist with same username or email
   try {
     var existingUser = await User.getByUsernameEmail(user.username, user.email);
   } catch (err) {
@@ -351,6 +351,7 @@ exports.changePassword = async (req, res) => {
     });
   }
 
+  // Check User Password
   if (!PasswordHash.verify(user.oldPassword, existingUser.password)) {
     return res.status(401).send({
       message: "Credentials doesn't match!!",
@@ -374,14 +375,14 @@ exports.changePassword = async (req, res) => {
 exports.sendMailForPassword = async (req, res) => {
   var user = req.body;
 
-  // Backend Validation
+  // Data Validation
   if (!user.username && !user.email) {
     return res
       .status(400)
       .send({ message: "Username or Email shall be provided!!" });
   }
 
-  // Check User Password
+  // Check if user doesn't exist with same username or email
   try {
     var existingUser = await User.getByUsernameEmail(user.username, user.email);
   } catch (err) {
