@@ -7,6 +7,9 @@ var auth = require("../middlewares/auth.middleware");
 /* Create Group. */
 router.post("/", auth, groupController.createGroup);
 
+/* Get group. */
+router.get("/:id", groupController.getGroup);
+
 /* Update users to group. */
 router.put("/", auth, groupController.updateUsers);
 

@@ -67,6 +67,35 @@ exports.createGroup = async (req, res) => {
   return res.status(200).send(group);
 };
 
+exports.getGroup = async (req, res) => {
+  // Convert request data to group
+  var id = req.params["id"];
+
+  // Data Validation
+  if (!id) {
+    return res.status(400).send({ message: "Group ID cannot be empty!!" });
+  }
+
+  // Check if group doesn't exist with id provided
+  try {
+    var existingGroup = await Group.getById(id);
+  } catch (err) {
+    return res.status(500).send({
+      message: "Internal Server Error!!",
+    });
+  }
+
+  // Group doesn't exist
+  if (!existingGroup) {
+    return res.status(404).send({
+      message: "Group doesn't exist!!",
+    });
+  }
+
+  // Return Groups if successfully created
+  return res.status(200).send(existingGroup);
+};
+
 exports.updateUsers = async (req, res) => {
   // Convert request data to group
   var group = req.body;
