@@ -14,7 +14,7 @@ var ForgetPassword = (module.exports = mongoose.model(
   forgetPasswordSchema
 ));
 
-// Create Forget Paassword
+// Create Forget Password
 module.exports.create = async (fp) => {
   fp = await fp.save();
   return fp;
