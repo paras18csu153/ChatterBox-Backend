@@ -35,6 +35,16 @@ module.exports.updateUsersById = async (id, users) => {
   return existingGroup;
 };
 
+// Update Admins By ID
+module.exports.updateAdminsById = async (id, admins) => {
+  var existingGroup = await Group.findByIdAndUpdate(
+    id,
+    { $set: { admins: admins } },
+    { new: true }
+  );
+  return existingGroup;
+};
+
 // Update Group By ID
 module.exports.updateGroupById = async (id, existingGroup) => {
   existingGroup = await Group.findByIdAndUpdate(

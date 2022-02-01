@@ -67,7 +67,7 @@ exports.createGroup = async (req, res) => {
   return res.status(200).send(group);
 };
 
-exports.updateUser = async (req, res) => {
+exports.updateUsers = async (req, res) => {
   // Convert request data to group
   var group = req.body;
 
@@ -151,6 +151,88 @@ exports.updateUser = async (req, res) => {
   return res.status(200).send(existingGroup);
 };
 
+exports.updateAdmins = async (req, res) => {
+  // Convert request data to group
+  var group = req.body;
+
+  // Data Validation
+  if (!group.admins) {
+    return res.status(400).send({ message: "Admins cannot be empty!!" });
+  }
+
+  if (group.admins.indexOf(group.username) != -1) {
+    return res
+      .status(400)
+      .send({ message: "You cannot add yourself to a Group!!" });
+  }
+
+  if (!group.id) {
+    return res.status(400).send({ message: "Group ID cannot be empty!!" });
+  }
+
+  if (group.admins.indexOf(group.username) == -1) {
+    group.admins.push(group.username);
+  }
+
+  var adminsLength = group.admins.length;
+  if (adminsLength == 0) {
+    return res.status(400).send({ message: "Admins cannot be empty!!" });
+  }
+
+  // Check if users sent exists or not
+  for (var i = 0; i < adminsLength; i++) {
+    try {
+      var user = await User.getByUsernameEmail(group.admins[i], "");
+    } catch (err) {
+      return res.status(500).send({
+        message: "Internal Server Error!!",
+      });
+    }
+
+    if (!user) {
+      return res.status(409).send({
+        message: "Admins are invalid!!",
+      });
+    }
+  }
+
+  // Check if group doesn't exist with id provided
+  try {
+    var existingGroup = await Group.getById(group.id);
+  } catch (err) {
+    return res.status(500).send({
+      message: "Internal Server Error!!",
+    });
+  }
+
+  // Group doesn't exist
+  if (!existingGroup) {
+    return res.status(404).send({
+      message: "Group doesn't exist!!",
+    });
+  }
+
+  var admins = existingGroup.admins;
+
+  if (admins.indexOf(group.username) == -1) {
+    return res.status(404).send({
+      message: "You cannot update group users!!",
+    });
+  }
+
+  // Update Admins of Group
+  try {
+    existingGroup = await Group.updateAdminsById(group.id, group.admins);
+  } catch (err) {
+    return res.status(500).send({
+      message: "Internal Server Error!!",
+    });
+  }
+
+  // Return Groups if successfully created
+  return res.status(200).send(existingGroup);
+};
+
 exports.exitGroup = async (req, res) => {
   var group = req.body;
 
@@ -196,8 +278,11 @@ exports.exitGroup = async (req, res) => {
   existingGroup.users.splice(userIndex, 1);
 
   if (existingGroup.users.length > 0) {
-    // Update Users of Group
-    existingGroup.admins.push(existingGroup.users[0]);
+    // Update Admins of Group
+    if (existingGroup.admins.length == 0) {
+      existingGroup.admins.push(existingGroup.users[0]);
+    }
+
     try {
       existingGroup = await Group.updateGroupById(group.id, existingGroup);
     } catch (err) {
