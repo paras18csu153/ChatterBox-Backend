@@ -35,6 +35,16 @@ module.exports.updateUsersById = async (id, users) => {
   return existingGroup;
 };
 
+// Update Group By ID
+module.exports.updateGroupById = async (id, existingGroup) => {
+  existingGroup = await Group.findByIdAndUpdate(
+    id,
+    { $set: existingGroup },
+    { new: true }
+  );
+  return existingGroup;
+};
+
 // Delete Group
 module.exports.deleteGroupById = async (id) => {
   var existingGroup = await Group.findByIdAndDelete(id);

@@ -187,15 +187,18 @@ exports.exitGroup = async (req, res) => {
     });
   }
 
+  // Check User is admin of the group
+  var adminIndex = existingGroup.admins.indexOf(group.username);
+  if (adminIndex != -1) {
+    existingGroup.admins.splice(adminIndex, 1);
+  }
+
   existingGroup.users.splice(userIndex, 1);
 
   if (existingGroup.users.length > 0) {
     // Update Users of Group
     try {
-      existingGroup = await Group.updateUsersById(
-        group.id,
-        existingGroup.users
-      );
+      existingGroup = await Group.updateGroupById(group.id, existingGroup);
     } catch (err) {
       return res.status(500).send({
         message: "Internal Server Error!!",
