@@ -10,4 +10,7 @@ router.post("/", auth, groupController.createGroup);
 /* Add users to group. */
 router.put("/", auth, groupController.updateUser);
 
+/* Exit Group. */
+router.post("/exit", auth, groupController.exitGroup);
+
 module.exports = router;

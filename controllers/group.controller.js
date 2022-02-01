@@ -150,3 +150,68 @@ exports.updateUser = async (req, res) => {
   // Return Groups if successfully created
   return res.status(200).send(existingGroup);
 };
+
+exports.exitGroup = async (req, res) => {
+  var group = req.body;
+
+  // Data Validation
+  if (!group.id) {
+    return res.status(400).send({ message: "Group ID cannot be empty!!" });
+  }
+
+  if (!group.username) {
+    return res.status(400).send({ message: "Username cannot be empty!!" });
+  }
+
+  // Check if group doesn't exist with id provided
+  try {
+    var existingGroup = await Group.getById(group.id);
+  } catch (err) {
+    return res.status(500).send({
+      message: "Internal Server Error!!",
+    });
+  }
+
+  // Group doesn't exist
+  if (!existingGroup) {
+    return res.status(404).send({
+      message: "Group doesn't exist!!",
+    });
+  }
+
+  // Check User in the group
+  var userIndex = existingGroup.users.indexOf(group.username);
+  if (userIndex == -1) {
+    return res.status(404).send({
+      message: "You aren't a part of this group!!",
+    });
+  }
+
+  existingGroup.users.splice(userIndex, 1);
+
+  if (existingGroup.users.length > 0) {
+    // Update Users of Group
+    try {
+      existingGroup = await Group.updateUsersById(
+        group.id,
+        existingGroup.users
+      );
+    } catch (err) {
+      return res.status(500).send({
+        message: "Internal Server Error!!",
+      });
+    }
+  } else {
+    // Delete Group
+    try {
+      existingGroup = await Group.deleteGroupById(group.id);
+    } catch (err) {
+      return res.status(500).send({
+        message: "Internal Server Error!!",
+      });
+    }
+  }
+
+  // Return Groups if successfully created
+  return res.status(200).send(existingGroup);
+};

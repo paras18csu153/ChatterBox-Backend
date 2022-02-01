@@ -34,3 +34,9 @@ module.exports.updateUsersById = async (id, users) => {
   );
   return existingGroup;
 };
+
+// Delete Group
+module.exports.deleteGroupById = async (id) => {
+  var existingGroup = await Group.findByIdAndDelete(id);
+  return existingGroup;
+};
