@@ -3,8 +3,8 @@ var Schema = mongoose.Schema;
 
 let forgetPasswordSchema = new Schema(
   {
-    verificationLink: { type: String, reqiured: true },
-    email: { type: String, reqiured: true },
+    verificationLink: { type: String, required: true },
+    email: { type: String, required: true },
   },
   { timestamps: true }
 );

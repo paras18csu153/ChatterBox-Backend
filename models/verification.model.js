@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 let verificationSchema = new Schema(
   {
-    verificationLink: { type: String, reqiured: true },
+    verificationLink: { type: String, required: true },
   },
   { timestamps: true }
 );
