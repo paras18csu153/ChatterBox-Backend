@@ -7,6 +7,7 @@ let userSchema = new Schema({
   email: { type: String, required: true },
   password: { type: String, required: true },
   verified: { type: Boolean, default: false },
+  blocklist: { type: Array },
 });
 
 var User = (module.exports = mongoose.model("User", userSchema));
@@ -47,6 +48,16 @@ module.exports.changePassword = async (email, password) => {
   var existingUser = await User.findOneAndUpdate(
     { email: email },
     { $set: { password: password } }
+  );
+  return existingUser;
+};
+
+// Update User's Blocklist
+module.exports.updateBlocklistById = async (id, blocklist) => {
+  var existingUser = await User.findByIdAndUpdate(
+    id,
+    { $set: { blocklist: blocklist } },
+    { new: true }
   );
   return existingUser;
 };

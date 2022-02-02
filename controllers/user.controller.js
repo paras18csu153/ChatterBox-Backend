@@ -54,6 +54,13 @@ exports.register = async (req, res) => {
     });
   }
 
+  // Check Blocklist
+  if (user.blocklist) {
+    return res.status(400).send({
+      message: "You cannot block users for now!!",
+    });
+  }
+
   // Hash Password
   user.password = PasswordHash.generate(user.password);
 
@@ -476,6 +483,68 @@ exports.resetPassword = async (req, res) => {
   }
 
   return res.status(200).send({ message: "Password Reset Successful!!" });
+};
+
+exports.updateBlocklist = async (req, res) => {
+  // Convert request data to user
+  var user = req.body;
+
+  // Check if user doesn't exist with same username or email
+  try {
+    var existingUser = await User.getByUsernameEmail(user.username, "");
+  } catch (err) {
+    return res.status(500).send({
+      message: "Internal Server Error!!",
+    });
+  }
+
+  if (!existingUser) {
+    return res.status(404).send({
+      message: "User doesn't exist!!",
+    });
+  }
+
+  if (!user.blocklist) {
+    user.blocklist = [];
+  } else {
+    if (user.blocklist.indexOf(user.username) > -1) {
+      return res.status(404).send({
+        message: "You cannot block Yourself!!",
+      });
+    }
+
+    // Check if users sent exists or not
+    for (var i = 0; i < user.blocklist.length; i++) {
+      try {
+        var userExists = await User.getByUsernameEmail(user.blocklist[i], "");
+      } catch (err) {
+        return res.status(500).send({
+          message: "Internal Server Error!!",
+        });
+      }
+
+      if (!userExists) {
+        return res.status(409).send({
+          message: "Users are invalid!!",
+        });
+      }
+    }
+  }
+
+  // Update User's Blocklist
+  try {
+    existingUser = await User.updateBlocklistById(
+      existingUser._id,
+      user.blocklist
+    );
+  } catch (err) {
+    return res.status(500).send({
+      message: "Internal Server Error!!",
+    });
+  }
+
+  // Return User if updated
+  return res.status(200).send(existingUser);
 };
 
 exports.logout = async (req, res) => {

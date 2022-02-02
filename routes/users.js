@@ -25,6 +25,9 @@ router.post("/sendMailForPassword", userController.sendMailForPassword);
 /*  Reset Password. */
 router.put("/reset/:verificationLink", userController.resetPassword);
 
+/*  Update Blocklist. */
+router.put("/blocklist", userController.updateBlocklist);
+
 /* Logout user. */
 router.post("/logout", auth, userController.logout);
 
