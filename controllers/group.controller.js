@@ -63,7 +63,7 @@ exports.createGroup = async (req, res) => {
     });
   }
 
-  // Return Groups if successfully created
+  // Return Group if successfully created
   return res.status(200).send(group);
 };
 
@@ -92,7 +92,7 @@ exports.getGroup = async (req, res) => {
     });
   }
 
-  // Return Groups if successfully created
+  // Return Group if exists
   return res.status(200).send(existingGroup);
 };
 
@@ -176,7 +176,7 @@ exports.updateUsers = async (req, res) => {
     });
   }
 
-  // Return Groups if successfully created
+  // Return Group if successfully updated
   return res.status(200).send(existingGroup);
 };
 
@@ -208,7 +208,7 @@ exports.updateAdmins = async (req, res) => {
     return res.status(400).send({ message: "Admins cannot be empty!!" });
   }
 
-  // Check if users sent exists or not
+  // Check if admins sent exists or not
   for (var i = 0; i < adminsLength; i++) {
     try {
       var user = await User.getByUsernameEmail(group.admins[i], "");
@@ -258,7 +258,7 @@ exports.updateAdmins = async (req, res) => {
     });
   }
 
-  // Return Groups if successfully created
+  // Return Group if successfully updated
   return res.status(200).send(existingGroup);
 };
 
@@ -330,6 +330,6 @@ exports.exitGroup = async (req, res) => {
     }
   }
 
-  // Return Groups if successfully created
+  // Return Group if successfully updated
   return res.status(200).send(existingGroup);
 };
