@@ -29,6 +29,14 @@ exports.createGroup = async (req, res) => {
   group.admins = [];
   group.admins.push(group.username);
 
+  group.users = group.users.filter(function (elem, pos) {
+    return group.users.indexOf(elem) == pos;
+  });
+
+  group.admins = group.admins.filter(function (elem, pos) {
+    return group.admins.indexOf(elem) == pos;
+  });
+
   var usersLength = group.users.length;
   if (usersLength < 2) {
     return res
@@ -119,6 +127,10 @@ exports.updateUsers = async (req, res) => {
     group.users.push(group.username);
   }
 
+  group.users = group.users.filter(function (elem, pos) {
+    return group.users.indexOf(elem) == pos;
+  });
+
   var usersLength = group.users.length;
   if (usersLength < 2) {
     return res
@@ -188,6 +200,10 @@ exports.updateAdmins = async (req, res) => {
   if (!group.admins) {
     return res.status(400).send({ message: "Admins cannot be empty!!" });
   }
+
+  group.admins = group.admins.filter(function (elem, pos) {
+    return group.admins.indexOf(elem) == pos;
+  });
 
   if (group.admins.indexOf(group.username) != -1) {
     return res
