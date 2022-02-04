@@ -8,14 +8,20 @@ module.exports = async function (req, res, next) {
 
   // Get Username from body
   var username = req.body.username;
+  var paramUsername = req.params["username"];
 
   // Data Validation
   if (!token) {
     return res.status(403).send({ message: "Unauthorized Access!!" });
   }
 
-  if (!username) {
+  if (!username && !paramUsername) {
     return res.status(400).send({ message: "Username cannot be empty!!" });
+  }
+
+  if (paramUsername && !username) {
+    username = req.params["username"];
+    req.body.username = req.params["username"];
   }
 
   // Check if token exists or not

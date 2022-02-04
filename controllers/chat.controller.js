@@ -120,17 +120,21 @@ exports.getChats = async (req, res) => {
   chat.user_id = existingUser._id;
   chat = new Chat(chat);
   try {
-    chat = await Chat.getChatById(chat);
+    existingChat = await Chat.getChatById(chat);
   } catch (err) {
     return res.status(500).send({
       message: "Internal Server Error!!",
     });
   }
 
-  if (!chat) {
-    return res.status(404).send({
-      message: "Chat Not Found!!",
-    });
+  if (!existingChat) {
+    try {
+      chat = await Chat.create(chat);
+    } catch (err) {
+      return res.status(500).send({
+        message: "Internal Server Error!!",
+      });
+    }
   }
 
   // Return All Chats

@@ -8,7 +8,7 @@ var auth = require("../middlewares/auth.middleware");
 router.post("/", auth, chatController.createChat);
 
 /* Get Chat by ID. */
-router.get("/", auth, chatController.getChats);
+router.get("/:username", auth, chatController.getChats);
 
 /* Update Chat by ID. */
 router.put("/", auth, chatController.updateChat);
