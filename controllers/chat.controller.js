@@ -129,7 +129,7 @@ exports.getChats = async (req, res) => {
 
   if (!existingChat) {
     try {
-      chat = await Chat.create(chat);
+      existingChat = await Chat.create(chat);
     } catch (err) {
       return res.status(500).send({
         message: "Internal Server Error!!",
@@ -138,7 +138,7 @@ exports.getChats = async (req, res) => {
   }
 
   // Return All Chats
-  return res.status(200).send(chat);
+  return res.status(200).send(existingChat);
 };
 
 exports.updateChat = async (req, res) => {
