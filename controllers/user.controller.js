@@ -174,7 +174,7 @@ exports.login = async (req, res) => {
   }
 
   var secret = process.env.SECRET;
-  var generatedToken = tokenGenerator(user.username, secret);
+  var generatedToken = tokenGenerator(existingUser.username, secret);
   if (!token) {
     token = new Token({
       token: generatedToken,
