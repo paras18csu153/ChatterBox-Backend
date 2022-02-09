@@ -20,12 +20,9 @@ io.on("connection", function (socket) {
       socket: socket,
     };
     sockets.push(data);
-    console.log("data: " + data);
-    console.log(sockets);
   });
 
   socket.on("sendMessage", (msg) => {
-    console.log("message: " + msg.message);
     var sendToSocket = sockets.filter(function (el) {
       return el.username == msg.to;
     })[0].socket;
@@ -38,9 +35,6 @@ io.on("connection", function (socket) {
     // }
 
     if (sendToSocket) {
-      console.log(sendToSocket);
-      console.log(sockets);
-
       sendToSocket.emit("receiveMessage", msg);
     }
   });
