@@ -15,7 +15,13 @@ io.on("connection", function (socket) {
   console.log("A user connected");
 
   socket.on("setSocketData", (data) => {
+    var existingSocket = sockets.find((o) => o.username === data.username);
+    var index = sockets.indexOf(existingSocket);
+    if (index > -1) {
+      sockets.splice(index, 1);
+    }
     sockets.push(data);
+    console.log(sockets);
   });
 
   socket.on("sendMessage", (msg) => {
